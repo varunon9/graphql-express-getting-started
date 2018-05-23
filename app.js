@@ -1,6 +1,6 @@
 /**
  * Created by: Varun kumar
- * Date: 08 May, 2018
+ * Date: 23 May, 2018
  */
 
 const express = require('express');
@@ -9,6 +9,8 @@ const path = require('path');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+
+const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config/config.json')[env];
@@ -39,7 +41,7 @@ app.use(bodyParser.urlencoded({
 
 app.use(cookieParser());
 
-// set all routes here
+// to serve static and public files
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 // logging POST Requests and parameters
@@ -52,11 +54,19 @@ app.use(function(req, res, next) {
     next();
 });
 
+const schema = require('./graphql-schema');
+
 /**
  * Set all routes here, orders are important
  */
 app.use('/', indexRoutes);
 app.use('/dashboard', dashboardRoutes);
+
+// The GraphQL endpoint
+app.use('/graphql', graphqlExpress({ schema }));
+
+// GraphiQL, a visual editor for queries
+app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
