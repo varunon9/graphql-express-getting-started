@@ -1,0 +1,18 @@
+{
+    "development": {
+        "username": "root",
+        "password": "password123",
+        "database": "graphqlStarterApp",
+        "host": "localhost",
+        "dialect": "mysql",
+        "superSecret": "graphqlStarterApp_SS-SECRET"
+    },
+    "production": {
+        "username": "root",
+        "password": "password123",
+        "database": "graphqlStarterApp",
+        "host": "localhost",
+        "dialect": "mysql",
+        "superSecret": "graphqlStarterApp_SS-SECRET"
+    }
+}

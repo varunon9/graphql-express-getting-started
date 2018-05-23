@@ -1,0 +1,27 @@
+{
+  "name": "graphql-express-getting-started",
+  "version": "1.0.0",
+  "description": "Login Signup implementation with graphql, sequelize and express using MySql database.",
+  "main": "bin/www",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/varunon9/graphql-express-getting-started.git"
+  },
+  "keywords": [
+    "graphql",
+    "semantic-ui",
+    "apollo-server-express"
+  ],
+  "author": "Varun Kumar <varunon9@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/varunon9/graphql-express-getting-started/issues"
+  },
+  "homepage": "https://github.com/varunon9/graphql-express-getting-started#readme",
+  "dependencies": {
+  },
+  "devDependencies": {}
+}
