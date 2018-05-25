@@ -48,3 +48,41 @@ $(document).ready(function() {
     });
 
 });
+
+(function() {
+    globals.makeGraphQLRequest('graphql', {
+        query: `query($email: String!) {
+            profile(email: $email) {
+                id mobile name email dob gender
+            }
+        }`,
+        variables: {
+            email: 'varunon9@gmail.com'
+        }
+    }, function successCallback(response) {
+        console.log(response);
+    });
+
+    globals.makeGraphQLRequest('graphql', {
+        query: `mutation($email: String!) {
+            updateUser(email: $email) {
+                email
+            }
+        }`,
+        variables: {
+            email: 'varunon9@gmail.com'
+        }
+    }, function successCallback(response) {
+        console.log(response);
+    });
+}());
+
+/*
+const mutation = gql`mutation ($content: String){
+  addPost(name: "Mary", title: "No title", content: $content) {
+    name
+    title
+    content
+  }
+}`;
+*/

@@ -1,7 +1,7 @@
 /**
  * @author Varun Kumar<varunon9@gmail.com>
  * https://github.com/varunon9
- * Date: 10 May, 2018
+ * Date: 25 May, 2018
  */
 
 'use strict';
@@ -36,6 +36,19 @@ globals.showToastMessage = function(heading, message, icon) {
         icon: icon  // info, error, warning, success
     });
 };
+
+globals.makeGraphQLRequest = function(url, params, successCallback) {
+    $.ajax({
+        url: url,
+        method: 'post',
+        data: params,
+        dataType: 'json',
+        success: function(response) {
+            successCallback(response);
+        },
+        error: globals.ajaxErrorHandler
+    });
+}
 
 /**
  * A utility function to convert date to suitable format needed to update input[type="date"]
