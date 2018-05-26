@@ -15,6 +15,8 @@ const { graphqlExpress, graphiqlExpress } = require('apollo-server-express');
 const env = process.env.NODE_ENV || 'development';
 const config = require('./config/config.json')[env];
 
+const middlewares = require('./middlewares');
+
 /**
  * Get all routes here
  */
@@ -62,11 +64,16 @@ const schema = require('./graphql-schema');
 app.use('/', indexRoutes);
 app.use('/dashboard', dashboardRoutes);
 
-// The GraphQL endpoint
-app.use('/graphql', graphqlExpress({ schema }));
+// The GraphQL endpoint, using security middleware: verifyToken
+app.use('/graphql', middlewares.verifyToken, graphqlExpress((req) => ({ 
+    schema: schema,
+    context: {
+        user: req.decoded
+    }
+})));
 
 // GraphiQL, a visual editor for queries
-app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
+//app.use('/graphiql', graphiqlExpress({ endpointURL: '/graphql' }));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

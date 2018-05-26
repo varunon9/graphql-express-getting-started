@@ -5,87 +5,115 @@
 
 const { makeExecutableSchema } = require('graphql-tools');
 
+const utilityService = require('../services/utilityService');
+const userService = require('../services/userService');
+
+const env = process.env.NODE_ENV || 'development';
+const config = require('../config/config.json')[env];
+
+const GraphQLJSON = require('graphql-type-json');
+
 // The GraphQL schema in string form
 const typeDefs = `
+    scalar JSON
+
     type Query { 
-        profile(email: String!): User 
-        users: [User]
-        getUser(email: String!): User
+        profile: User!
     }
 
     type User { 
-        id: Int!, 
-        mobile: Int
+        id: Int, 
+        mobile: String
         name: String 
         gender: String
-        email: String!
+        email: String
         dob: String
         deactivated: Boolean
         type: String
         createdAt: String
-        modifiedAt: String
+        modifiedAt: String,
+        error: String
     }
 
     type Mutation {
-        createUser(email: String!): User
-        updateUser(email: String!): User
+        updateProfile(params: JSON!): User
     }
 `;
 
 // The resolvers
 const resolvers = {
+    JSON: GraphQLJSON,
+
     Query: { 
-        profile: (obj, args, context, info) => {
-            return {
-                id: 1,
-                email: 'varunon9@gmail.com'
-            }
-        },
-        users: (obj, args, context, info) => {
+        profile: (root, args, context, info) => {
+            return new Promise((resolve, reject) => {
+                const params = {};
+                params.email = context.user.email;
 
-        },
-        getUser: (obj, args, context, info) => {
-
+                userService.getUser(params)
+                    .then(user => {
+                        resolve(user);
+                    }).catch(err => {
+                        resolve({
+                            error: err
+                        });
+                    });
+            });
         }
     },
     User: {
-        id: (obj, args, context, info) => {
-
+        id: (root, args, context, info) => {
+            return root.id;
         },
-        mobile: (obj, args, context, info) => {
-
+        mobile: (root, args, context, info) => {
+            return root.mobile;
         },
-        name: (obj, args, context, info) => {
-
+        name: (root, args, context, info) => {
+            return root.name;
         },
-        gender: (obj, args, context, info) => {
-
+        gender: (root, args, context, info) => {
+            return root.gender;
         },
-        email: (obj, args, context, info) => {
-
+        email: (root, args, context, info) => {
+            return root.email;
         },
-        dob: (obj, args, context, info) => {
-
+        dob: (root, args, context, info) => {
+            return root.dob;
         },
-        deactivated: (obj, args, context, info) => {
-
+        deactivated: (root, args, context, info) => {
+            return root.deactivated;
         },
-        type: (obj, args, context, info) => {
-
+        type: (root, args, context, info) => {
+            return root.type;
         },
-        createdAt: (obj, args, context, info) => {
-
+        createdAt: (root, args, context, info) => {
+            return root.createdAt;
         },
-        modifiedAt: (obj, args, context, info) => {
-
+        modifiedAt: (root, args, context, info) => {
+            return root.modifiedAt;
+        },
+        modifiedAt: (root, args, context, info) => {
+            return root.error;
         }
     },
     Mutation: {
-        createUser: (obj, args, context, info) => {
-            return {};
-        },
-        updateUser: (obj, args, context, info) => {
-            return {};
+        updateProfile: (root, args, context, info) => {
+            return new Promise((resolve, reject) => {
+                const params = args.params;
+
+                // can't update email and password
+                params.email = context.user.email;
+                delete params.password;
+                
+                userService.updateUser(params)
+                    .then(user => {
+                        resolve(user);
+                    }).catch(err => {
+                        resolve({
+                            error: err
+                        });
+                    });
+            });  
         }
     }
 };

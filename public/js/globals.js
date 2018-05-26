@@ -38,13 +38,18 @@ globals.showToastMessage = function(heading, message, icon) {
 };
 
 globals.makeGraphQLRequest = function(url, params, successCallback) {
+    var self = this;
     $.ajax({
         url: url,
         method: 'post',
         data: params,
         dataType: 'json',
         success: function(response) {
-            successCallback(response);
+            if (response.data) {
+                successCallback(response.data);
+            } else {
+                self.showToastMessage('Error', 'Server side error', 'error');
+            }
         },
         error: globals.ajaxErrorHandler
     });
@@ -98,16 +103,6 @@ globals.ajaxService = {
 
     signupUser: function(params, successCallback, failureCallback) {
         var url = 'signup';
-        makeAjaxPostRequest(url, params, successCallback, failureCallback);
-    },
-
-    updateUserProfile: function(params, successCallback, failureCallback) {
-        var url = 'dashboard/update/user';
-        makeAjaxPostRequest(url, params, successCallback, failureCallback);
-    },
-
-    getUserProfile: function(params, successCallback, failureCallback) {
-        var url = 'dashboard/get/user/profile';
         makeAjaxPostRequest(url, params, successCallback, failureCallback);
     }
 };
